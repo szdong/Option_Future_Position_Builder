@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from pylab import *
 
 
 class option_type:
@@ -61,11 +62,16 @@ class position_builder:
             self.x.append(s)
             self.y.append(p)
 
+        profit = maximum(self.y, 0)
+        loss = minimum(self.y, 0)
+
         plt.figure(figsize=(size_x, size_y))
         plt.plot(self.x, self.y)
         plt.grid(b=True, which='major', color='#666666', linestyle='-')
         plt.minorticks_on()
         plt.grid(b=True, which='minor', color='#999999', linestyle='-', alpha=0.2)
+        plt.fill_between(self.x, 0, loss, facecolor='r', alpha=0.5)
+        plt.fill_between(self.x, 0, profit, facecolor='g', alpha=0.5)
         plt.title("Position PnL")
         plt.xlabel("BTC/USDT")
         plt.ylabel("PnL")
