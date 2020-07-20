@@ -29,7 +29,6 @@ class option_info:
 
 class position_builder:
     def __init__(self):
-        self.fee = 0
         self.options_lst = []
         self.futures_lst = []
         self.x = []
@@ -53,8 +52,7 @@ class position_builder:
             option_p = 0
             future_p = 0
             for option in self.options_lst:
-                option_p += (max(option.option_type * (s - option.price),
-                                 0) - option.premium) * option.lot * option.side
+                option_p += (max(option.option_type * (s - option.price), 0) - option.premium) * option.lot * option.side
             for future in self.futures_lst:
                 future_p += (future.future_type * (s - future.price) * future.lot)
 
