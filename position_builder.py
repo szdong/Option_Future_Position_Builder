@@ -1,4 +1,3 @@
-import matplotlib.pyplot as plt
 from pylab import *
 
 
@@ -29,11 +28,12 @@ class option_info:
 
 
 class position_builder:
-    def __init__(self):
+    def __init__(self, symbol="BTC/USDT"):
         self.options_lst = []
         self.futures_lst = []
         self.x = []
         self.y = []
+        self.symbol = symbol
 
     def add_option(self, option_info: option_info):
         self.options_lst.append(option_info)
@@ -73,5 +73,5 @@ class position_builder:
         plt.fill_between(self.x, 0, loss, facecolor='r', alpha=0.5)
         plt.fill_between(self.x, 0, profit, facecolor='g', alpha=0.5)
         plt.title("Position PnL")
-        plt.xlabel("BTC/USDT")
+        plt.xlabel(self.symbol)
         plt.ylabel("PnL")
