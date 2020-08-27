@@ -18,6 +18,12 @@ class future_info:
         self.lot = lot
 
 
+class spot_info:
+    def __init__(self, price, lot):
+        self.price = price
+        self.lot = lot
+
+
 class option_info:
     def __init__(self, price, option_type: option_type, side: side, lot, premium):
         self.price = price
@@ -31,6 +37,7 @@ class position_builder:
     def __init__(self, symbol="BTC/USDT"):
         self.options_lst = []
         self.futures_lst = []
+        self.spot_lst = []
         self.x = []
         self.y = []
         self.symbol = symbol
@@ -41,9 +48,12 @@ class position_builder:
     def add_future(self, future_info: future_info):
         self.futures_lst.append(future_info)
 
+    def add_spot(self, spot_info: spot_info):
+        self.spot_lst.append(spot_info)
+
     def build_position(self, scale=800, step=1, fee=0, size_x=10, size_y=6):
         price_lst = []
-        for contract in self.futures_lst + self.options_lst:
+        for contract in self.futures_lst + self.options_lst + self.spot_lst:
             price_lst.append(contract.price)
 
         start = int(min(price_lst) - scale)
@@ -52,12 +62,15 @@ class position_builder:
         for s in range(start, end, step):
             option_p = 0
             future_p = 0
+            spot_p = 0
             for option in self.options_lst:
                 option_p += (max(option.option_type * (s - option.price), 0) - option.premium) * option.lot * option.side
             for future in self.futures_lst:
                 future_p += (future.future_type * (s - future.price) * future.lot)
+            for spot in self.spot_lst:
+                spot_p += (s - spot.price) * spot.lot
 
-            p = option_p + future_p - fee
+            p = option_p + future_p + spot_p - fee
 
             self.x.append(s)
             self.y.append(p)
